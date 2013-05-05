@@ -1,0 +1,16 @@
+﻿# for gvim backupfile 
+*~
+*.swp
+*.bak
+*.log
+
+*.pyc
+
+
+# protobuf
+*.pb.cc 
+*.pb.h
+
+*.sublime-project
+*.sublime-workspace
+*.sqlite

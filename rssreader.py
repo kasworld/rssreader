@@ -5,31 +5,15 @@
 made by kasw
 copyright 2013
 Version""" 
-
 Version = '1.0.0'
 
 import os,io,sys,os.path,math,random,re,datetime,time,string,pprint,uuid,urllib
 import optparse,struct,multiprocessing,binascii,itertools,functools,logging,exceptions
 
-import sys,os.path
-srcdir = os.path.dirname(os.path.abspath(sys.argv[0]))
-sys.path.extend( [
-    os.path.join( srcdir , 'kaswlib' ),
-    os.path.join( os.path.split( srcdir)[0] , 'kaswlib' ),
-    ])
-try :
-    from kaswlib import *
-except :
-    print 'kaswlib import fail'
-    pass
-
-logger = getLogger(logging.DEBUG,'kaswrssreader')
-
 import signal
 def sigstophandler(signum, frame):
     print 'User Termination'
 #signal.signal(signal.SIGINT, sigstophandler)
-
 
 import feedparser
 from bs4 import BeautifulSoup
@@ -84,10 +68,11 @@ def mkDateTimeFromstruct_time( src ):
         return datetime.datetime.now()
     return datetime.datetime( *src[:6] )
 
+logger = multiprocessing.log_to_stderr()
+logger.setLevel(logging.INFO)
+
 from xml.sax import SAXException
 def feed_requester(feed_url,resultqueue,errqueue):
-    logger = multiprocessing.log_to_stderr()
-    logger.setLevel(logging.INFO)
     try:
         d = feedparser.parse(feed_url)
     except SAXException as errno:
@@ -166,7 +151,7 @@ def importOPMLFile(opmlfilename=None):
         try :
             opml = BeautifulSoup(open(opmlfilename))
         except :
-            print 'fail to load opml', opmlfilename
+            logger.info(( 'fail to load opml', opmlfilename ))
             opml = None
     if opml :
         for feed in  opml('outline') :
